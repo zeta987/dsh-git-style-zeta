@@ -30,6 +30,7 @@
   "main": "lib/index.js",
   "exports": {
     ".": "./lib/index.js",
+    "./client": "./lib/client.js",
     "./package.json": "./package.json"
   },
   "files": [
@@ -51,11 +52,14 @@
     "manifestVersion": 1,
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
     }
   },
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "check": "node --check lib/index.js && npm test && npm run check:package",
+    "check": "node --check lib/index.js && node --check lib/client.js && npm test && npm run check:package",
     "check:package": "node scripts/check-package.mjs",
     "test:coverage": "node --experimental-test-coverage --test-coverage-include=lib/*.js --test-coverage-lines=95 --test-coverage-branches=95 --test-coverage-functions=95 --test tests/*.test.mjs"
   },
@@ -64,8 +68,9 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "4.0.2",
-    "@deepseek-ai/dsh-system-prompt": "0.0.1-rc.1",
-    "@deepseek-ai/dsh-scope": "0.0.1-rc.1",
+    "@deepseek-ai/dsh-scope": "^0.1.5-rc.2",
+    "@deepseek-ai/dsh-settings": "^0.1.5-rc.2",
+    "@deepseek-ai/dsh-system-prompt": "^0.1.5-rc.2",
     "yaml": "2.9.1"
   }
 }

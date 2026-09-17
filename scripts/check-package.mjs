@@ -14,8 +14,9 @@ const [pack] = packs;
 assert.deepEqual(pack.files.map(file => file.path).sort(), [
   'LICENSE', 'README.md', 'README.zh-CN.md', 'README.zh-TW.md',
   'cordis.patch.yml', 'docs/releasing.md', 'examples/cordis.patch.yml',
-  'lib/index.js', 'package.json',
-  'docs/images/README.md', 'docs/images/plugin-list-en.png', 'docs/images/plugin-list-zh.png',
-  'docs/images/system-prompt-en.png', 'docs/images/system-prompt-zh.png',
+  'lib/index.js', 'lib/client.js', 'package.json',
+  'docs/images/README.md', 'docs/images/settings-en.png', 'docs/images/settings-zh.png',
+  'docs/images/commit-session-en.png', 'docs/images/commit-session-zh.png',
+  'docs/images/git-log-en.png', 'docs/images/git-log-zh.png',
 ].sort(), 'Published files must match the distributable allowlist');
 console.log(`Package verified: ${pack.filename}, ${pack.files.length} files, ${pack.size} bytes`);
