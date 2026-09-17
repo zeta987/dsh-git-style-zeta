@@ -1,12 +1,19 @@
-# Apply after installing the bundle into the selected profile.
+# A profile default for this plugin, applied after installing the bundle into
+# the selected profile. The Git style page in Settings edits a user layer over
+# this row, so a value saved there wins while it stands.
 # This replaces the row's entire config; keep both fields here.
+#
+# Write each instruction as a plain rule. A condition the model has to
+# interpret, such as "only when it is absent", is read less reliably than
+# "unless that exact line is already there".
 - id: git-style-zeta
   config:
     git-commit-instructions: |-
-      Use Conventional Commits with a concise subject and a body explaining why.
-      Preserve existing author and co-author trailers.
-      Add only the attribution explicitly provided by the user, and only if absent.
+      Use Conventional Commits: a subject under 50 characters, and a body saying why the change was needed.
+      End the message with Co-authored-by: DSH <dsh@example.com>, unless that exact line is already there.
+      Keep every other author's attribution and never rewrite existing commits.
     git-pr-instructions: |-
-      Describe the problem, the resulting behavior, and the checks actually run.
+      Title the pull request with the resulting behavior in one line.
+      In the body: the problem, the behavior after the change, and the checks actually run.
       Distinguish passed, failed, and unexecuted checks.
-      Preserve existing attribution and hidden template markers.
+      Keep the template's existing attribution and hidden markers.
