@@ -1,6 +1,6 @@
 {
   "name": "dsh-git-style-zeta",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "description": "Configurable Git commit and pull request prompt instructions for DeepSeek Harness",
   "license": "MIT",
