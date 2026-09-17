@@ -1,0 +1,8 @@
+node_modules/
+.npm-cache/
+.context-history.md
+*.tgz
+coverage/
+.tmp/
+.playwright-cli/
+output/

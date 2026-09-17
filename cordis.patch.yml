@@ -1,0 +1,5 @@
+# Host-level prompt contributions for the DSH profile loading this bundle.
+# Override this row in the profile's cordis.patch.yml to configure instructions.
+- insert:
+    - id: git-style-zeta
+      name: dsh-git-style-zeta

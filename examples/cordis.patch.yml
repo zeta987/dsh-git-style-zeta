@@ -1,0 +1,12 @@
+# Apply after installing the bundle into the selected profile.
+# This replaces the row's entire config; keep both fields here.
+- id: git-style-zeta
+  config:
+    git-commit-instructions: |-
+      Use Conventional Commits with a concise subject and a body explaining why.
+      Preserve existing author and co-author trailers.
+      Add only the attribution explicitly provided by the user, and only if absent.
+    git-pr-instructions: |-
+      Describe the problem, the resulting behavior, and the checks actually run.
+      Distinguish passed, failed, and unexecuted checks.
+      Preserve existing attribution and hidden template markers.
