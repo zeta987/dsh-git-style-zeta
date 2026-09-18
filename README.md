@@ -66,12 +66,15 @@ the `git-style-zeta` row, so configure it with `id` rather than another
   config:
     git-commit-instructions: |-
       Use Conventional Commits: a subject under 50 characters, and a body saying why the change was needed.
-      End the message with Co-authored-by: DSH <dsh@example.com>, unless that exact line is already there.
-      Keep every other author's attribution and never rewrite existing commits.
+      End the message with this trailer exactly once:
+      Co-authored-by: DeepSeek Harness <noreply@deepseek.com>
+      If that exact line is missing, append it with one blank line before the trailer block.
     git-pr-instructions: |-
       Title the pull request with the resulting behavior in one line.
-      In the body: the problem, the behavior after the change, and the checks actually run.
-      Keep the template's existing attribution and hidden markers.
+      In the body: the problem, the behavior after the change, and the checks actually run; distinguish passed, failed, and unexecuted checks.
+      The body must contain this exact line once:
+      Generated with [DeepSeek Harness](https://deepseek.com/harness/).
+      If it is missing, append it near the end, before any trailing hidden metadata markers.
 ```
 
 That row is the layer Settings edits over, so the settings page wins while it
@@ -79,9 +82,11 @@ holds a value. DSH replaces the row's entire `config` when applying an
 override, so keep both fields in the override when you use both.
 
 The plugin adds your text as written and always asks the model to preserve
-existing authors and co-authors. Write the instruction as a plain rule: a
-condition the model has to interpret, such as "only when it is absent", is read
-less reliably than "unless that exact line is already there". Do not put
+existing authors and co-authors. Write each rule so the model can decide it by
+looking at the text: name the exact line, say it appears exactly once, and say
+what to do when it is missing. A condition the model has to interpret, such as
+"only when it is absent", is read less reliably — in one demo run the model took
+it as needing an explicit request and skipped the trailer. Do not put
 credentials in prompt text. Only the DSH profile loading this plugin is
 affected.
 
@@ -90,7 +95,7 @@ affected.
 Install the version explicitly, then restart the host:
 
 ```sh
-dsh plugin --profile web add dsh-git-style-zeta@0.2.0
+dsh plugin --profile web add dsh-git-style-zeta@0.2.1
 ```
 
 ## Remove

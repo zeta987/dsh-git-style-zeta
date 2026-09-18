@@ -3,17 +3,20 @@
 # this row, so a value saved there wins while it stands.
 # This replaces the row's entire config; keep both fields here.
 #
-# Write each instruction as a plain rule. A condition the model has to
-# interpret, such as "only when it is absent", is read less reliably than
-# "unless that exact line is already there".
+# Write each rule so the model can decide it by looking at the text: name the
+# exact line, say it appears exactly once, and say what to do when it is
+# missing. A condition the model has to interpret, such as "only when it is
+# absent", is read less reliably.
 - id: git-style-zeta
   config:
     git-commit-instructions: |-
       Use Conventional Commits: a subject under 50 characters, and a body saying why the change was needed.
-      End the message with Co-authored-by: DSH <dsh@example.com>, unless that exact line is already there.
-      Keep every other author's attribution and never rewrite existing commits.
+      End the message with this trailer exactly once:
+      Co-authored-by: DeepSeek Harness <noreply@deepseek.com>
+      If that exact line is missing, append it with one blank line before the trailer block.
     git-pr-instructions: |-
       Title the pull request with the resulting behavior in one line.
-      In the body: the problem, the behavior after the change, and the checks actually run.
-      Distinguish passed, failed, and unexecuted checks.
-      Keep the template's existing attribution and hidden markers.
+      In the body: the problem, the behavior after the change, and the checks actually run; distinguish passed, failed, and unexecuted checks.
+      The body must contain this exact line once:
+      Generated with [DeepSeek Harness](https://deepseek.com/harness/).
+      If it is missing, append it near the end, before any trailing hidden metadata markers.

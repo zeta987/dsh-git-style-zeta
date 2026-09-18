@@ -61,28 +61,32 @@ dsh plugin --profile web add dsh-git-style-zeta
   config:
     git-commit-instructions: |-
       使用 Conventional Commits：標題不超過 50 字，本文說明為什麼要改。
-      訊息結尾加上 Co-authored-by: DSH <dsh@example.com>，除非這一行已經存在。
-      保留其他作者的署名，也不要重寫既有 commit。
+      訊息結尾必須有這一行 trailer，且只出現一次：
+      Co-authored-by: DeepSeek Harness <noreply@deepseek.com>
+      這一行不存在時，在 trailer 區塊前空一行後補上。
     git-pr-instructions: |-
       標題用一句話說明改完後的行為。
-      本文寫問題、改完後的行為，以及實際跑過的檢查。
-      保留樣板裡既有的署名與隱藏標記。
+      本文寫問題、改完後的行為，以及實際跑過的檢查；區分通過、失敗與未執行。
+      本文必須包含這一行，且只出現一次：
+      Generated with [DeepSeek Harness](https://deepseek.com/harness/).
+      這一行不存在時，補在結尾附近、任何尾端隱藏標記之前。
 ```
 
 這一列就是設定頁疊在上面的那一層，所以設定頁有值時以設定頁為準。DSH
 套用覆寫時會取代整列 `config`，兩欄都要使用時請在覆寫中一併保留。
 
-插件會依原文加入妳的設定，並要求模型保留既有作者與共同作者。指令請寫成
-直接的規則：像「只在缺少時加入」這種需要模型自行判讀的條件，會比「除非
-這一行已經存在」更容易被誤讀。請勿在 prompt 文字中放入憑證。只有載入此
-插件的 DSH profile 會受影響。
+插件會依原文加入妳的設定，並要求模型保留既有作者與共同作者。每條規則請
+寫成模型看字面就能判定的形式：指名確切的那一行、說明只出現一次、並交代
+缺少時該怎麼做。像「只在缺少時加入」這種需要模型自行判讀的條件比較容易
+被誤讀——實際示範中就有一次被解讀成要使用者開口才加，結果沒補上 trailer。
+請勿在 prompt 文字中放入憑證。只有載入此插件的 DSH profile 會受影響。
 
 ## 更新
 
 明確指定版本安裝，再重新啟動 host：
 
 ```sh
-dsh plugin --profile web add dsh-git-style-zeta@0.2.0
+dsh plugin --profile web add dsh-git-style-zeta@0.2.1
 ```
 
 ## 移除

@@ -6,8 +6,8 @@ Simplified Chinese READMEs share the native Chinese screenshot, as the sibling
 plugins do.
 
 - settings-en.png / settings-zh.png: the plugin's own section in DSH Settings,
-  after saving both fields. An element screenshot of the settings dialog at a
-  1360 by 1080 viewport.
+  after saving both fields with the instruction text the READMEs document. An
+  element screenshot of the settings dialog at a 1360 by 1080 viewport.
 - commit-session-en.png / commit-session-zh.png: a real session in the demo
   repository below, asked only to commit the uncommitted change. Viewport
   screenshots at 1280 by 820.
@@ -24,11 +24,17 @@ sections; no message, badge, style or prompt content was edited for the images.
 DeepSeek was the configured provider, and the account, credentials and sessions
 of the daily DSH install were never copied or read.
 
-The English commit session was run twice. The first run used the wording "Add
+The session and git-log images were captured before the documented example was
+rewritten, so they show the same rule in an earlier phrasing and use a shorter
+placeholder identity than the settings screenshots do. They were not retaken,
+because neither image displays the instruction text — what they show is the
+commit the model produced. The settings screenshots were retaken against the
+current wording.
+
+That rewrite has its own reason. The first English run used "Add
 Co-authored-by: … only when that line is absent", which the model read as
-needing an explicit request and skipped; the instruction was reworded to
-"unless that exact line is already there" and both languages were then re-run
-with the final wording shown in the settings screenshots. The README records
+needing an explicit request, so it skipped the trailer; rewording it to name the
+exact line and say what to do when it is missing fixed it. The READMEs record
 this as guidance on how to phrase an instruction.
 
 Only native navigation, language selection, scrolling, viewport sizing and
