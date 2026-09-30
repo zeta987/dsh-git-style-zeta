@@ -94,9 +94,17 @@ test('schema rejects non-string instruction values other than native null defaul
   }
 });
 
+/** Snapshot every volatile field of a parsed config into plain values. */
+function values(config) {
+  return Object.fromEntries(Object.entries(config).map(([key, ref]) => [key, ref.get()]));
+}
+
 test('omitted and YAML null values use the native empty defaults', () => {
-  assert.deepEqual(plugin.Config({}), { 'git-commit-instructions': '', 'git-pr-instructions': '' });
-  assert.deepEqual(plugin.Config({ 'git-commit-instructions': null, 'git-pr-instructions': null }), plugin.Config({}));
+  assert.deepEqual(values(plugin.Config({})), { 'git-commit-instructions': '', 'git-pr-instructions': '' });
+  assert.deepEqual(
+    values(plugin.Config({ 'git-commit-instructions': null, 'git-pr-instructions': null })),
+    values(plugin.Config({})),
+  );
 });
 
 test('repeated assemblies preserve arbitrary braces, whitespace and existing prompt data', async t => {

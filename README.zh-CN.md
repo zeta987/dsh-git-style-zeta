@@ -41,10 +41,14 @@ dsh plugin --profile web add dsh-git-style-zeta
 每个 profile 都是独立的安装根。请将 `web` 换成目标 profile，并在每个需要
 这些指引的 profile 分别安装。
 
+这个版本需要 DSH 0.1.7-rc.2 或更新版本；较旧的 host 请继续使用
+`dsh-git-style-zeta@0.2.1`。
+
 ## 配置
 
-打开设置并选择 **Git 风格**。保存会在 host 的设置文档写入用户层，字段上
-的「在此設定」标记就是这样来的；点击「改用 profile 的值」会再清除这一层。
+打开设置并选择 **Git 风格**。保存会把字段写进 profile 的 `cordis.patch.yml`
+中 `git-style-zeta` 这一行，字段上的「在此設定」标记就是这样来的；点击「改用預設值」
+会再把它从这一行移除。
 
 | 字段 | 默认 | 用途 |
 |---|---|---|
@@ -74,7 +78,8 @@ dsh plugin --profile web add dsh-git-style-zeta
       这一行不存在时，补在结尾附近、任何尾端隐藏标记之前。
 ```
 
-这一行就是设置页叠在上面的那一层，所以设置页有值时以设置页为准。DSH
+设置页编辑的正是这一行，因此在任一处设置的值都会出现在另一处。请保留行 id
+`git-style-zeta`：DSH 以它命名设置表单，改名后设置页就会脱钩。DSH
 应用覆盖时会替换整行 `config`，两个字段都要使用时请在覆盖中一并保留。
 
 插件会按原文加入你的配置，并要求模型保留既有作者与共同作者。每条规则请
@@ -88,7 +93,7 @@ dsh plugin --profile web add dsh-git-style-zeta
 明确指定版本安装，再重启 host：
 
 ```sh
-dsh plugin --profile web add dsh-git-style-zeta@0.2.1
+dsh plugin --profile web add dsh-git-style-zeta@0.3.0
 ```
 
 ## 卸载

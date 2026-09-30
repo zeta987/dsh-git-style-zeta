@@ -6,6 +6,8 @@ import { Config } from '../lib/index.js';
 
 const root = new URL('../', import.meta.url);
 const read = file => readFile(new URL(file, root), 'utf8');
+/** Parse a row config and snapshot its volatile fields into plain values. */
+const resolved = config => Object.fromEntries(Object.entries(Config(config)).map(([key, ref]) => [key, ref.get()]));
 
 test('bundle points to the published native plugin and profile override config validates', async () => {
   const pkg = JSON.parse(await read('package.json'));
@@ -13,7 +15,7 @@ test('bundle points to the published native plugin and profile override config v
   assert.deepEqual(patch, [{ insert: [{ id: 'git-style-zeta', name: pkg.name }] }]);
   const [override] = parse(await read('examples/cordis.patch.yml'));
   assert.equal(override.id, patch[0].insert[0].id);
-  assert.deepEqual(Config(override.config), override.config);
+  assert.deepEqual(resolved(override.config), override.config);
   assert.equal(pkg.main, 'lib/index.js');
   assert.equal(pkg.exports['.'], './lib/index.js');
   for (const topic of ['dsh-plugin', 'deepseek-harness', 'dsh']) assert.ok(pkg.keywords.includes(topic));
@@ -27,7 +29,7 @@ test('all README YAML examples use the same supported config and all local links
     assert.ok(yaml, `${file} needs a configuration example`);
     const [row] = parse(yaml[1]);
     assert.equal(row.id, 'git-style-zeta');
-    assert.deepEqual(Config(row.config), row.config);
+    assert.deepEqual(resolved(row.config), row.config);
     for (const [, link] of text.matchAll(/\]\(([^)]+)\)/g)) {
       if (!link.startsWith('https://')) await read(link);
     }

@@ -49,23 +49,24 @@ function normalize(ops) {
   return Array.from(ops, (op) => ({ ...op }));
 }
 
-/** A settings scope stub recording every mutation the page queues. */
-function scopeStub(snapshot) {
+/** A config form stub recording every mutation the page submits. */
+function formStub(snapshot) {
   const calls = [];
   return {
     calls,
     getSnapshot: () => snapshot,
     subscribe: () => () => {},
-    set: async (field, value) => { calls.push({ op: 'set', field, value }); },
-    unset: async (field) => { calls.push({ op: 'unset', field }); },
+    mutate: async (ops) => { calls.push(ops); return true; },
   };
 }
+
+const READY = { status: 'ready', base: {}, user: {}, value: {}, revision: 1, writable: true, mode: 'host' };
 
 test('registers under the package id and exports the loader shape', async () => {
   const { registration, exports } = await loadClient();
   assert.equal(registration.id, 'dsh-git-style-zeta');
   assert.equal(typeof registration.factory, 'function');
-  assert.deepEqual([...exports.inject], ['slots', 'locale', 'settingsScope']);
+  assert.deepEqual([...exports.inject], ['slots', 'locale', 'configForms']);
   assert.equal(typeof exports.apply, 'function');
 });
 
@@ -183,22 +184,47 @@ test('clearing a field the profile does not set removes the override', async () 
   assert.deepEqual(ops, [{ field: 'git-pr-instructions' }]);
 });
 
-test('apply binds the plugin namespace and registers one settings section', async () => {
+test('the wire mutation sets written fields and unsets cleared ones in order', async () => {
+  const { exports } = await loadClient();
+  const ops = [
+    { field: 'git-commit-instructions', value: 'Explain why.' },
+    { field: 'git-pr-instructions' },
+  ];
+  assert.deepEqual(
+    Array.from(exports.pathOpsOf(ops), (op) => ({ ...op, path: [...op.path] })),
+    [
+      { op: 'set', path: ['git-commit-instructions'], value: 'Explain why.' },
+      { op: 'unset', path: ['git-pr-instructions'] },
+    ],
+  );
+  assert.deepEqual([...exports.pathOpsOf([])], []);
+});
+
+test('an empty-string edit is written, not cleared, when the profile sets text', async () => {
+  const { exports } = await loadClient();
+  const snapshot = { ...READY, base: { 'git-pr-instructions': 'row text' } };
+  const ops = exports.pathOpsOf(exports.opsFor({ commit: '', pr: '' }, snapshot));
+  assert.deepEqual(Array.from(ops, (op) => ({ ...op, path: [...op.path] })), [
+    { op: 'set', path: ['git-pr-instructions'], value: '' },
+  ]);
+});
+
+test('apply opens the form of the plugin entry and registers one settings section', async () => {
   const { exports } = await loadClient();
   const registered = [];
-  const bound = [];
+  const opened = [];
   let active = 'en';
-  const scope = scopeStub({ status: 'ready', base: {}, user: {}, value: {} });
+  const form = formStub(READY);
   const ctx = {
     locale: { getSnapshot: () => ({ active }), subscribe: () => () => {} },
-    settingsScope: { bind: (spec) => { bound.push({ ...spec }); return scope; } },
+    configForms: { get: (entryId) => { opened.push(entryId); return form; } },
     slots: {
       inject: (_name, run) => run(),
       register: (options, component) => registered.push({ options, component }),
     },
   };
   exports.apply(ctx);
-  assert.deepEqual(bound, [{ namespace: 'git-style-zeta' }]);
+  assert.deepEqual(opened, ['git-style-zeta']);
   assert.equal(registered.length, 1);
   const { options, component } = registered[0];
   assert.equal(options.name, 'settings.section');
@@ -219,10 +245,10 @@ test('apply adds its stylesheet once and tolerates a repeated load', async () =>
     createElement: () => ({ id: '', textContent: '' }),
   };
   const { exports } = await loadClient({ document });
-  const scope = scopeStub({ status: 'ready', base: {}, user: {}, value: {} });
+  const form = formStub(READY);
   const ctx = {
     locale: { getSnapshot: () => ({ active: 'en' }), subscribe: () => () => {} },
-    settingsScope: { bind: () => scope },
+    configForms: { get: () => form },
     slots: { inject: (_name, run) => run(), register: () => {} },
   };
   exports.apply(ctx);

@@ -41,11 +41,15 @@ dsh plugin --profile web add dsh-git-style-zeta
 Profiles are separate install roots. Replace `web` with the target profile and
 install the plugin into each profile that should use these instructions.
 
+This release requires DSH 0.1.7-rc.2 or later. On older hosts, stay on
+`dsh-git-style-zeta@0.2.1`.
+
 ## Configure
 
-Open Settings and pick **Git style**. Saving writes a user layer in the host's
-settings document, which is where a field's `set here` badge comes from; `Use
-the profile value` clears that layer again.
+Open Settings and pick **Git style**. Saving writes the field into the
+`git-style-zeta` row of the profile's `cordis.patch.yml`, which is where a
+field's `set here` badge comes from; `Use the default` removes it from
+that row again.
 
 | Field | Default | Used for |
 |---|---|---|
@@ -77,9 +81,11 @@ the `git-style-zeta` row, so configure it with `id` rather than another
       If it is missing, append it near the end, before any trailing hidden metadata markers.
 ```
 
-That row is the layer Settings edits over, so the settings page wins while it
-holds a value. DSH replaces the row's entire `config` when applying an
-override, so keep both fields in the override when you use both.
+That row is the same one the settings page edits, so a value set in either
+place shows up in the other. Keep the row id `git-style-zeta`: DSH names the
+settings form by it, and a renamed row detaches the page. DSH replaces the
+row's entire `config` when applying an override, so keep both fields in the
+override when you use both.
 
 The plugin adds your text as written and always asks the model to preserve
 existing authors and co-authors. Write each rule so the model can decide it by
@@ -95,7 +101,7 @@ affected.
 Install the version explicitly, then restart the host:
 
 ```sh
-dsh plugin --profile web add dsh-git-style-zeta@0.2.1
+dsh plugin --profile web add dsh-git-style-zeta@0.3.0
 ```
 
 ## Remove
